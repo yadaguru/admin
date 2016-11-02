@@ -15,7 +15,8 @@ angular.module('ygAdmin.login', ['ui.router'])
   'apiService',
   'authService',
   '$state',
-  function($scope, api, auth, $state) {
+  'errorService',
+  function($scope, api, auth, $state, error) {
     $scope.login = function() {
       api.post('admin_users', {
         userName: $scope.userName,
@@ -23,7 +24,7 @@ angular.module('ygAdmin.login', ['ui.router'])
       }).then(function(resp) {
         auth.saveUserToken(resp.data.token);
         $state.go('reminders');
-      });
+      }).catch(error.handleHttpError)
     };
 
 

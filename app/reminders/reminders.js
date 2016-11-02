@@ -11,7 +11,20 @@ angular.module('ygAdmin.reminders', ['ui.router'])
 }])
 
 .controller('RemindersCtrl', [
+  '$scope',
   'apiService',
-  function(api) {
-    console.log(api.foo());
+  'errorService',
+  function($scope, api, error) {
+    getReminders()
+      .then(processReminders)
+      .catch(error.handleHttpError);
+
+    function getReminders() {
+      return api.getAll('base_reminders');
+    }
+
+    function processReminders(response) {
+      console.log(response.data);
+      $scope.reminders = response.data;
+    }
 }]);

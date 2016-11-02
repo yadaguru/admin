@@ -5,6 +5,7 @@ angular
   .module('ygAdmin', [
     'ygAdmin.login',
     'ygAdmin.reminders',
+    'ygAdmin.reminders.edit',
     'ygAdmin.categories',
     'ygAdmin.version',
     'ygAdmin.services',
@@ -17,9 +18,10 @@ angular
     'localStorageServiceProvider',
     function($locationProvider, $urlRouterProvider, localStorageServiceProvider) {
       $locationProvider.hashPrefix('!');
-      $urlRouterProvider.otherwise(function() {
-        return '/reminders';
-      });
+      //$urlRouterProvider.otherwise(function() {
+      //  console.log('otherwise');
+      //  return '/reminders';
+      //});
       localStorageServiceProvider.setPrefix('yg.');
   }])
   .run([
@@ -27,9 +29,10 @@ angular
     '$state',
     'authService',
     function($rootScope, $state, auth) {
-      $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+      $rootScope.$on('$stateChangeStart', function(event, toState) {
         console.log(toState.name, auth.isAuthorized());
         if (!auth.isAuthorized() && toState.name !== 'login') {
+          event.preventDefault();
           console.log('going to login');
           $state.go('login');
         }
