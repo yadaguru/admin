@@ -18,8 +18,8 @@
   <ul class="menu">
     <li><a ui-sref="reminders">Reminders</a></li>
     <li><a ui-sref="categories">Categories</a></li>
-    <!--<li><a href="#!/timeframes">Timeframes</a></li>-->
-    <!--<li><a href="#!/tests">Tests</a></li>-->
+    <li><a ui-sref="timeframes">Timeframes</a></li>
+    <li><a ui-sref="tests">Tests</a></li>
     <!--<li><a href="#!/test_dates">Test Dates</a></li>-->
     <!--<li><a href="#!/content_items">Content Items</a></li>-->
     <li ng-if="!isAuthorized()"><a ui-sref="login">Login</a></li>
@@ -32,8 +32,6 @@
 
   <div ui-view></div>
 
-  <div>Angular seed app: v<span app-version></span></div>
-
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
@@ -45,17 +43,17 @@
   <script src="services/services.js"></script>
   <script src="services/api.js"></script>
   <script src="services/auth.js"></script>
+  <script src="services/base-controllers.js"></script>
   <script src="services/error.js"></script>
+  <script src="components/directives.js"></script>
+  <script src="components/list-table/list-table.js"></script>
   <script src="login/login.js"></script>
   <script src="reminders/reminders-edit.js"></script>
   <script src="reminders/reminders.js"></script>
   <script src="categories/categories.js"></script>
-  <!--<script src="timeframes/timeframes.js"></script>-->
-  <!--<script src="tests/tests.js"></script>-->
+  <script src="timeframes/timeframes.js"></script>
+  <script src="tests/tests.js"></script>
   <!--<script src="testDates/testDates.js"></script>-->
   <!--<script src="contentItems/contentItemds.js"></script>-->
-  <script src="components/version/version.js"></script>
-  <script src="components/version/version-directive.js"></script>
-  <script src="components/version/interpolate-filter.js"></script>
 </body>
 </html>

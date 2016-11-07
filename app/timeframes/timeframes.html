@@ -1,0 +1,8 @@
+<h2>Timeframes</h2>
+<div ng-if="loaded">
+  <yg-list-table resource="timeframes" columns="['Name', 'Type', 'Formula']">
+    <yg-link-cell key="name" sref-view="timeframes-edit" sref-param="id" sref-value="id"></yg-link-cell>
+    <yg-text-cell key="type"></yg-text-cell>
+    <yg-text-cell key="formula"></yg-text-cell>
+  </yg-list-table>
+</div>

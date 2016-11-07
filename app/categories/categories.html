@@ -1,5 +1,6 @@
-<p>This is the partial for view 2.</p>
-<p>
-  Showing of 'interpolate' filter:
-  {{ 'Current version is v%VERSION%.' | interpolate }}
-</p>
+<h2>Categories</h2>
+<div ng-if="loaded">
+  <yg-list-table resource="categories" columns="['Name']">
+    <yg-link-cell key="name" sref-view="categories-edit" sref-param="id" sref-value="id"></yg-link-cell>
+  </yg-list-table>
+</div>

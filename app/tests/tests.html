@@ -1,0 +1,8 @@
+<h2>Tests</h2>
+<div ng-if="loaded">
+  <yg-list-table resource="tests" columns="['Type', 'Registration Message', 'Administration Message']">
+    <yg-link-cell key="type" sref-view="tests-edit" sref-param="id" sref-value="id"></yg-link-cell>
+    <yg-text-cell key="registrationMessage"></yg-text-cell>
+    <yg-text-cell key="adminMessage"></yg-text-cell>
+  </yg-list-table>
+</div>

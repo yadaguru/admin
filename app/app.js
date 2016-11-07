@@ -7,8 +7,10 @@ angular
     'ygAdmin.reminders',
     'ygAdmin.reminders.edit',
     'ygAdmin.categories',
-    'ygAdmin.version',
+    'ygAdmin.timeframes',
+    'ygAdmin.tests',
     'ygAdmin.services',
+    'ygAdmin.directives',
     'LocalStorageModule',
     'ui.router'
   ])

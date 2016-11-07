@@ -10,6 +10,10 @@ angular.module('ygAdmin.categories', ['ui.router'])
   });
 })
 
-.controller('CategoriesCtrl', [function() {
-
+.controller('CategoriesCtrl', [
+  '$scope',
+  'baseControllersService',
+  function($scope, BaseController) {
+    var controller = BaseController.getListController('categories', $scope);
+    controller.init();
 }]);
