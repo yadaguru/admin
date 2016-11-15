@@ -5,7 +5,6 @@ angular
   .module('ygAdmin', [
     'ygAdmin.login',
     'ygAdmin.reminders',
-    'ygAdmin.reminders.edit',
     'ygAdmin.categories',
     'ygAdmin.timeframes',
     'ygAdmin.tests',

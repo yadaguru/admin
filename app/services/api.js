@@ -6,35 +6,28 @@ angular.module('ygAdmin.services.api', [])
   '$http',
   'authService',
   function($http, auth) {
-    var authHeaderConfig = {
-      headers: {
-        Authorization: function() {
-          return auth.getUserToken();
-        }
+    function getRequestConfig(isPublic) {
+      if (isPublic) {
+        return {};
       }
-    };
+      return {headers: {Authorization: auth.getUserToken()}}
+    }
 
     var BASE_URL = 'http://localhost:3005/api/'; // TODO: move to config
 
     function getAll(resource, isPublic) {
       var route = BASE_URL + resource + '/';
-      var config = isPublic ? undefined : authHeaderConfig;
-
-      return $http.get(route, config);
+      return $http.get(route, getRequestConfig(isPublic));
     }
 
     function getOne(resource, id, isPublic) {
       var route = BASE_URL + resource + '/' + id + '/';
-      var config = isPublic ? undefined : authHeaderConfig;
-
-      return $http.get(route, config);
+      return $http.get(route, getRequestConfig(isPublic));
     }
 
-    function post(resource, data, isPublic) {
+    function post(resource, data) {
       var route = BASE_URL + resource + '/';
-      var config = isPublic ? undefined : authHeaderConfig;
-
-      return $http.post(route, data, config);
+      return $http.post(route, data, getRequestConfig());
     }
 
     return {

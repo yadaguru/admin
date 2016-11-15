@@ -1,16 +1,16 @@
 'use strict';
 
-describe('ygAdmin.categories module', function() {
-  var CategoriesCtrl, $scope, baseControllersService;
+describe('ygAdmin.timeframes module', function() {
+  var TimeframesCtrl, $scope, baseControllersService;
 
-  beforeEach(module('ygAdmin.categories'));
+  beforeEach(module('ygAdmin.timeframes'));
 
   beforeEach(module(function($provide) {
     baseControllersService = {
       getListController: function() {
         return {
           init: function() {
-            $scope.categories = [{foo: 'foo'}, {bar: 'bar'}];
+            $scope.timeframes = [{foo: 'foo'}, {bar: 'bar'}];
             $scope.loaded = true;
           }
         }
@@ -22,15 +22,15 @@ describe('ygAdmin.categories module', function() {
 
   beforeEach(inject(function($rootScope, $controller, baseControllersService) {
     $scope = $rootScope.$new();
-    CategoriesCtrl = $controller('CategoriesCtrl', {
+    TimeframesCtrl = $controller('TimeframesCtrl', {
       $scope: $scope,
       baseControllersService: baseControllersService
     });
   }));
 
-  describe('categories controller $scope', function(){
-    it('should have a reference to all categories after init', function() {
-      expect($scope.categories).toEqual([{foo: 'foo'}, {bar: 'bar'}]);
+  describe('timeframes controller $scope', function(){
+    it('should have a reference to all timeframes after init', function() {
+      expect($scope.timeframes).toEqual([{foo: 'foo'}, {bar: 'bar'}]);
       expect($scope.loaded).toBe(true);
     });
   });

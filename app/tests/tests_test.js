@@ -1,16 +1,16 @@
 'use strict';
 
-describe('ygAdmin.categories module', function() {
-  var CategoriesCtrl, $scope, baseControllersService;
+describe('ygAdmin.tests module', function() {
+  var TestsCtrl, $scope, baseControllersService;
 
-  beforeEach(module('ygAdmin.categories'));
+  beforeEach(module('ygAdmin.tests'));
 
   beforeEach(module(function($provide) {
     baseControllersService = {
       getListController: function() {
         return {
           init: function() {
-            $scope.categories = [{foo: 'foo'}, {bar: 'bar'}];
+            $scope.tests = [{foo: 'foo'}, {bar: 'bar'}];
             $scope.loaded = true;
           }
         }
@@ -22,15 +22,15 @@ describe('ygAdmin.categories module', function() {
 
   beforeEach(inject(function($rootScope, $controller, baseControllersService) {
     $scope = $rootScope.$new();
-    CategoriesCtrl = $controller('CategoriesCtrl', {
+    TestsCtrl = $controller('TestsCtrl', {
       $scope: $scope,
       baseControllersService: baseControllersService
     });
   }));
 
-  describe('categories controller $scope', function(){
-    it('should have a reference to all categories after init', function() {
-      expect($scope.categories).toEqual([{foo: 'foo'}, {bar: 'bar'}]);
+  describe('tests controller $scope', function(){
+    it('should have a reference to all tests after init', function() {
+      expect($scope.tests).toEqual([{foo: 'foo'}, {bar: 'bar'}]);
       expect($scope.loaded).toBe(true);
     });
   });
