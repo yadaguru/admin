@@ -21,6 +21,7 @@ module.exports = function(config) {
       'timeframes/*.js',
       'tests/*.js',
       'testDates/*.js',
+      'contentItems/*.js',
       'login/*.js',
       'components/**/*.js',
       'services/**/*.js',
