@@ -20,7 +20,7 @@
     <li><a ui-sref="categories">Categories</a></li>
     <li><a ui-sref="timeframes">Timeframes</a></li>
     <li><a ui-sref="tests">Tests</a></li>
-    <!--<li><a href="#!/test_dates">Test Dates</a></li>-->
+    <li><a ui-sref="testDates">Test Dates</a></li>
     <!--<li><a href="#!/content_items">Content Items</a></li>-->
     <li ng-if="!isAuthorized()"><a ui-sref="login">Login</a></li>
     <li ng-if="isAuthorized()"><a href="#" ng-click="logout()">Logout</a></li>
@@ -39,6 +39,8 @@
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/angular-moment/angular-moment.js"></script>
   <script src="app.js"></script>
   <script src="services/services.js"></script>
   <script src="services/api.js"></script>
@@ -48,12 +50,12 @@
   <script src="components/directives.js"></script>
   <script src="components/list-table/list-table.js"></script>
   <script src="login/login.js"></script>
-  <script src="reminders/reminders-edit.js"></script>
+  <!--<script src="reminders/reminders-edit.js"></script>-->
   <script src="reminders/reminders.js"></script>
   <script src="categories/categories.js"></script>
   <script src="timeframes/timeframes.js"></script>
   <script src="tests/tests.js"></script>
-  <!--<script src="testDates/testDates.js"></script>-->
+  <script src="testDates/testDates.js"></script>
   <!--<script src="contentItems/contentItemds.js"></script>-->
 </body>
 </html>

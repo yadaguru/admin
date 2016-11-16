@@ -8,6 +8,7 @@ angular
     'ygAdmin.categories',
     'ygAdmin.timeframes',
     'ygAdmin.tests',
+    'ygAdmin.testDates',
     'ygAdmin.services',
     'ygAdmin.directives',
     'LocalStorageModule',

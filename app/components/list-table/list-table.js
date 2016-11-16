@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ygAdmin.directives.listTable', [])
+angular.module('ygAdmin.directives.listTable', ['angularMoment'])
 
 .directive('ygListTable', [
   function() {
@@ -67,6 +67,25 @@ angular.module('ygAdmin.directives.listTable', [])
       controller: [function() {}],
       link: function($scope, element, attrs, ctrl) {
         $scope.value = $scope.$parent.$parent.item[attrs.key];
+      }
+    }
+  }
+])
+
+.directive('ygDateCell', [
+  'moment',
+  function($moment) {
+    return {
+      restrict: 'E',
+      require: '^ygListTable',
+      template: '<td>{{ value }}</td>',
+      scope: true,
+      replace: true,
+      controller: ['$scope', function($scope) {}],
+      link: function($scope, element, attrs) {
+        var format = attrs.format || 'M/D/YYYY';
+        var value = $scope.$parent.$parent.item[attrs.key];
+        $scope.value = $moment.utc(value).format(format);
       }
     }
   }

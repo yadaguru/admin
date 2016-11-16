@@ -82,7 +82,7 @@ describe('ygAdmin.directives.listTable module', function() {
       expect(secondRowCell.find('div').next().html()).toEqual('pie');
     });
 
-    it('should...', function() {
+    it('should render an anchor link to the specified view with including a link-cell directive', function() {
       $rootScope.items = [{
         id: 1,
         name: 'Foo'
@@ -110,6 +110,33 @@ describe('ygAdmin.directives.listTable module', function() {
       expect(firstRowLink.attr('href')).toEqual('#items-edit/1/');
       expect(secondRowLink.html()).toEqual('Bar');
       expect(secondRowLink.attr('href')).toEqual('#items-edit/2/');
+    });
+
+    it('should render formatted date when using a date-cell directive', function() {
+      $rootScope.items = [{
+        registrationDate: '2017-02-01',
+        adminDate: '2017-02-15'
+      }, {
+        registrationDate: '2017-03-01',
+        adminDate: '2017-03-15'
+      }];
+
+      var table = $compile(
+        '<yg-list-table resource="items" columns="[\'Registration Date\', \'Admin Date\']">' +
+        '<yg-date-cell key="registrationDate"></yg-date-cell>' +
+        '<yg-date-cell key="adminDate" format="YYYY/MM/DD"></yg-date-cell>' +
+        '</yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+
+      var tbody = table.find('tbody');
+      var firstRow = tbody.find('tr');
+      var secondRow = tbody.find('tr').next();
+      expect(firstRow.find('td').html()).toEqual('2/1/2017');
+      expect(firstRow.find('td').next().html()).toEqual('2017/02/15');
+      expect(secondRow.find('td').html()).toEqual('3/1/2017');
+      expect(secondRow.find('td').next().html()).toEqual('2017/03/15');
     });
   });
 });
