@@ -1,0 +1,6 @@
+<form novalidate name="form">
+  <div ng-transclude></div>
+  <button ng-if="!isNew" class="btn btn-danger pull-left" ng-click="deleteItem()">Delete</button>
+  <button ng-disabled="form.$invalid" class="btn btn-primary pull-right" ng-click="saveItem()">Save</button>
+  <button class="btn btn-default pull-right" ng-click="cancel()">Cancel</button>
+</form>

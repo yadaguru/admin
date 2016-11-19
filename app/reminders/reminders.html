@@ -1,9 +1,9 @@
 <h2>Reminders</h2>
 <div ng-if="loaded">
   <yg-list-table resource="base_reminders" columns="['Name', 'Category', 'Message', 'Timeframes']">
-    <yg-link-cell key="name" sref-view="reminders-edit" sref-param="id" sref-value="id"></yg-link-cell>
+    <yg-link-cell key="name" sref-view="remindersEdit" sref-param="id" sref-value="id"></yg-link-cell>
     <yg-text-cell key="categoryName"></yg-text-cell>
     <yg-text-cell key="message"></yg-text-cell>
-    <yg-array-cell key="timeframes"><yg-array-cell>
+    <yg-array-cell key="timeframes"></yg-array-cell>
   </yg-list-table>
 </div>

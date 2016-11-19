@@ -6,7 +6,7 @@ describe('The ygAdmin.services.api service', function() {
   beforeEach(module('ygAdmin.services.api'));
 
   beforeEach(module(function($provide) {
-    httpSpy = jasmine.createSpyObj('http', ['get', 'post']);
+    httpSpy = jasmine.createSpyObj('http', ['get', 'post', 'put', 'delete']);
     authGetUserTokenSpy = jasmine.createSpy('authGetUserToken');
 
     $provide.value('$http', httpSpy);
@@ -89,7 +89,7 @@ describe('The ygAdmin.services.api service', function() {
 
     beforeEach(function() {
       responseData = [{id: 1, foo: 'foo'}];
-      requestData = [{foo: 'foo'}];
+      requestData = {foo: 'foo'};
       deferred.resolve(responseData);
       httpSpy.post.and.returnValue(deferred.promise);
     });
@@ -103,6 +103,70 @@ describe('The ygAdmin.services.api service', function() {
         requestData,
         httpConfig
       )
+    });
+
+    it('converts numbers and booleans to strings before sending request', function() {
+      requestData = {foo: 'foo', bar: 1, bazz: true};
+      api.post('foo', requestData).then(function(r) {result = r});
+      rootScope.$apply();
+      expect(httpSpy.post).toHaveBeenCalledWith(
+        'http://localhost:3005/api/foo/',
+        {foo: 'foo', bar: '1', bazz: 'true'},
+        httpConfig
+      );
+    })
+  });
+
+  describe('put method', function() {
+    var result, requestData, responseData;
+
+    beforeEach(function() {
+      responseData = [{id: 1, foo: 'foo'}];
+      requestData = {foo: 'foo'};
+      deferred.resolve(responseData);
+      httpSpy.put.and.returnValue(deferred.promise);
+    });
+
+    it('should return a promise resolving with the HTTP response on successful update', function() {
+      api.put('foo', requestData, 1).then(function(r) {result = r});
+      rootScope.$apply();
+      expect(result).toEqual(responseData);
+      expect(httpSpy.put).toHaveBeenCalledWith(
+        'http://localhost:3005/api/foo/1/',
+        requestData,
+        httpConfig
+      );
+    });
+
+    it('converts numbers and booleans to strings before sending request', function() {
+      requestData = {foo: 'foo', bar: 1, bazz: true};
+      api.put('foo', requestData, 1).then(function(r) {result = r});
+      rootScope.$apply();
+      expect(httpSpy.put).toHaveBeenCalledWith(
+        'http://localhost:3005/api/foo/1/',
+        {foo: 'foo', bar: '1', bazz: 'true'},
+        httpConfig
+      );
+    })
+  });
+
+  describe('delete method', function() {
+    var result, responseData;
+
+    beforeEach(function() {
+      responseData = {deletedId: 1};
+      deferred.resolve(responseData);
+      httpSpy.delete.and.returnValue(deferred.promise);
+    });
+
+    it('should return a promise resolving with the HTTP response on successful update', function() {
+      api.delete('foo', 1).then(function(r) {result = r});
+      rootScope.$apply();
+      expect(result).toEqual(responseData);
+      expect(httpSpy.delete).toHaveBeenCalledWith(
+        'http://localhost:3005/api/foo/1/',
+        httpConfig
+      );
     });
   });
 });

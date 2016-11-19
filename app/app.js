@@ -13,7 +13,9 @@ angular
     'ygAdmin.services',
     'ygAdmin.directives',
     'LocalStorageModule',
-    'ui.router'
+    'ui.router',
+    'ui.bootstrap',
+    'cgPrompt'
   ])
   .config([
     '$locationProvider',

@@ -1,0 +1,24 @@
+<h2>Reminders Edit Form</h2>
+<yg-edit-form resource="base_reminders">
+  <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required></yg-text-input>
+  <yg-drop-down
+      label="Category (Required)"
+      ng-model="base_reminders.categoryId"
+      option-resource="categories"
+      option-value="id"
+      option-text="name"
+      required
+  ></yg-drop-down>
+  <yg-multi-drop-down
+      label="Timeframes (Required)"
+      ng-model="base_reminders.timeframeIds"
+      option-resource="timeframes"
+      option-value="id"
+      option-text="name"
+      required
+  ></yg-multi-drop-down>
+  <yg-rich-text-box label="Message (Required)" ng-model="base_reminders.message" required></yg-rich-text-box>
+  <yg-rich-text-box label="Detail (Required)" ng-model="base_reminders.detail" required></yg-rich-text-box>
+  <yg-rich-text-box label="Late Message (Optional)" ng-model="base_reminders.lateMessage"></yg-rich-text-box>
+  <yg-rich-text-box label="Late Detail (Optional)" ng-model="base_reminders.lateDetail"></yg-rich-text-box>
+</yg-edit-form>
