@@ -1,7 +1,12 @@
-<h2>Reminders</h2>
 <div ng-if="loaded">
-  <yg-list-table resource="base_reminders" columns="['Name', 'Category', 'Message', 'Timeframes']">
-    <yg-link-cell key="name" sref-view="remindersEdit" sref-param="id" sref-value="id"></yg-link-cell>
+  <yg-list-table
+      resource="base_reminders"
+      columns="['Name', 'Category', 'Message', 'Timeframes']"
+      item="Reminder"
+      items="Reminders"
+      edit-view="remindersEdit"
+  >
+    <yg-text-cell key="name"></yg-text-cell>
     <yg-text-cell key="categoryName"></yg-text-cell>
     <yg-text-cell key="message"></yg-text-cell>
     <yg-array-cell key="timeframes"></yg-array-cell>

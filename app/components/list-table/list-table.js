@@ -1,19 +1,32 @@
 'use strict';
 
-angular.module('ygAdmin.directives.listTable', ['angularMoment'])
+angular.module('ygAdmin.directives.listTable', ['angularMoment', 'ui.router'])
 
 .directive('ygListTable', [
-  function() {
+  '$state',
+  function($state) {
     return {
       restrict: 'E',
       replace: true,
       scope: {
         resource: '=',
-        columns: '='
+        columns: '=',
+        title: '@',
+        items: '@',
+        item: '@',
+        editView: '@'
       },
       templateUrl: 'components/list-table/list-table.html',
       transclude: true,
-      controller: ['$scope', function($scope) {}]
+      controller: [function(){}],
+      link: function(scope) {
+        scope.newItem = function() {
+          $state.go(scope.editView);
+        };
+        scope.editItem = function(item) {
+          $state.go(scope.editView, {id: item.id})
+        }
+      }
     }
   }
 ])
@@ -29,28 +42,6 @@ angular.module('ygAdmin.directives.listTable', ['angularMoment'])
       controller: ['$scope', function($scope) {}],
       link: function($scope, element, attrs) {
         $scope.value = $scope.$parent.$parent.item[attrs.key];
-      }
-    }
-  }
-])
-
-.directive('ygLinkCell', [
-  function() {
-    return {
-      restrict: 'E',
-      require: '^ygListTable',
-      scope: true,
-      replace: true,
-      template: '<td><a href="{{ sref }}">{{ value }}</a></td>',
-      controller: ['$scope', '$state', function($scope, $state) {
-        $scope.state = $state;
-      }],
-      link: function($scope, element, attrs) {
-        var item = $scope.$parent.$parent.item;
-        $scope.value = item[attrs.key];
-        var params = {};
-        params[attrs.srefParam] = item[attrs.srefValue];
-        $scope.sref = $scope.state.href(attrs.srefView, params);
       }
     }
   }

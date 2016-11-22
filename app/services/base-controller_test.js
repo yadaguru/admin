@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The ygAdmin.services.baseControllers service', function() {
+xdescribe('The ygAdmin.services.baseControllers service', function() {
   var deferred, rootScope, baseControllers, api, error;
   var apiSpy, errorSpy;
 

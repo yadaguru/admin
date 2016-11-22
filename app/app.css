@@ -27,3 +27,12 @@
   content: "|";
   padding-right: 0.3em;
 }
+
+/** Utility Classes **/
+.mt0 {
+  margin-top: 0;
+}
+
+.pointer {
+  cursor: pointer;
+}

@@ -1,6 +1,11 @@
-<h2>Content Items</h2>
 <div ng-if="loaded">
-  <yg-list-table resource="content_items" columns="['Name']">
-    <yg-link-cell key="name" sref-view="contentItems-edit" sref-param="name" sref-value="name"></yg-link-cell>
+  <yg-list-table
+      resource="content_items"
+      columns="['Name']"
+      item="Content Item"
+      items="Content Items"
+      edit-view="contentItemsEdit"
+  >
+    <yg-text-cell key="name"></yg-text-cell>
   </yg-list-table>
 </div>

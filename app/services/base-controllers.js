@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('ygAdmin.services.baseControllers', ['ui.router'])
+angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 'toastr'])
 
   .factory('baseControllersService', [
     'apiService',
     'errorService',
     '$state',
     'prompt',
-    function(api, error, $state, prompt) {
+    'toastr',
+    function(api, error, $state, prompt, toastr) {
       function getListController(resource, $scope) {
         return {
           init: function() {
@@ -36,7 +37,7 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router'])
             if (id) {
               return getItem(id)
                 .then(processItem)
-                .catch(error.handleHttpError);
+                .catch(handleError);
             }
             $scope.isNew = true;
             $scope[resource] = {};
@@ -54,7 +55,7 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router'])
           var method = $scope.isNew ? 'post' : 'put';
           api[method](resource, $scope[resource], $scope[resource].id)
             .then(handleSuccessfulSave)
-            .catch(error.handleHttpError);
+            .catch(handleError);
         }
 
         function deleteItem() {
@@ -64,7 +65,7 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router'])
             message: 'Are you sure you want to delete this item?'
           }).then(function() {
             api.delete(resource, $scope[resource].id)
-              .then(handleSucessfulDelete)
+              .then(handleSuccessfulDelete)
               .catch(error.handleHttpError)
           })
         }
@@ -81,10 +82,19 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router'])
 
         function handleSuccessfulSave(res) {
           console.log('saved successfully');
+          toastr.success('Item saved successfully');
+          $state.go(parentState);
         }
 
-        function handleSucessfulDelete(res) {
+        function handleSuccessfulDelete(res) {
           console.log('deleted successfully');
+          toastr.success('Item deleted successfully');
+          $state.go(parentState);
+        }
+
+        function handleError(err) {
+          toastr.error('There was an error processing request. Please try again.');
+          error.handleHttpError(err);
         }
       }
 

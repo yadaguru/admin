@@ -6,7 +6,7 @@ describe('ygAdmin.directives.listTable module', function() {
   beforeEach(module('ygAdmin.directives.listTable'));
   beforeEach(module('templates'));
   beforeEach(module(function($provide) {
-    $state = jasmine.createSpyObj('$state', ['href']);
+    $state = jasmine.createSpyObj('$state', ['href', 'go']);
     $provide.value('$state', $state);
   }));
 
@@ -26,6 +26,59 @@ describe('ygAdmin.directives.listTable module', function() {
       $rootScope.$digest();
       expect(table.find('th').html()).toEqual('bar');
       expect(table.find('th').next().html()).toEqual('bazz');
+    });
+
+    it('should render the "items" attribute at the top of the table', function() {
+      var table = $compile(
+        '<yg-list-table items="foos"></yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(table.find('h2').text()).toEqual('foos');
+    });
+
+    it('should render a new button using the text of the "item" attribute', function() {
+      var table = $compile(
+        '<yg-list-table item="foo"></yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(table.find('button').text()).toEqual('New foo');
+    });
+
+    it('should go to the item edit (new) view when the new item button is clicked', function() {
+      var table = $compile(
+        '<yg-list-table edit-view="foosEdit"></yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      table.find('button').triggerHandler('click');
+      expect($state.go).toHaveBeenCalledWith('foosEdit');
+    });
+
+    it('should go to teh item edit view for a particular item when the row is clicked', function() {
+      $rootScope.items = [{
+        id: 1,
+        name: 'Foo'
+      }, {
+        id: 2,
+        name: 'Bar'
+      }];
+
+      var table = $compile(
+        '<yg-list-table resource="items" columns="[\'name\']" edit-view="foosEdit">' +
+        '<yg-text-cell key="name"></yg-text-cell>' +
+        '</yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+
+      var tbody = table.find('tbody');
+      var rows = tbody.find('tr');
+
+      rows.triggerHandler('click');
+      expect($state.go).toHaveBeenCalledWith('foosEdit', {id: 1});
+      expect($state.go).toHaveBeenCalledWith('foosEdit', {id: 2});
     });
 
     it('should render nested text-cells for each resource', function() {
@@ -80,36 +133,6 @@ describe('ygAdmin.directives.listTable module', function() {
       expect(firstRowCell.find('div').next().html()).toEqual('taco');
       expect(secondRowCell.find('div').html()).toEqual('cake');
       expect(secondRowCell.find('div').next().html()).toEqual('pie');
-    });
-
-    it('should render an anchor link to the specified view with including a link-cell directive', function() {
-      $rootScope.items = [{
-        id: 1,
-        name: 'Foo'
-      }, {
-        id: 2,
-        name: 'Bar'
-      }];
-
-      $state.href.and.callFake(function(view, params) {
-        return '#' + view + '/' + params.id + '/';
-      });
-
-      var table = $compile(
-        '<yg-list-table resource="items" columns="[\'Foods\']">' +
-        '<yg-link-cell key="name" sref-view="items-edit" sref-param="id" sref-value="id"></yg-link-cell>' +
-        '</yg-list-table>'
-      )($rootScope);
-
-      $rootScope.$digest();
-
-      var tbody = table.find('tbody');
-      var firstRowLink = tbody.find('tr').find('a');
-      var secondRowLink = tbody.find('tr').next().find('a');
-      expect(firstRowLink.html()).toEqual('Foo');
-      expect(firstRowLink.attr('href')).toEqual('#items-edit/1/');
-      expect(secondRowLink.html()).toEqual('Bar');
-      expect(secondRowLink.attr('href')).toEqual('#items-edit/2/');
     });
 
     it('should render formatted date when using a date-cell directive', function() {
