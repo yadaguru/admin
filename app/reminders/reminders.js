@@ -30,7 +30,6 @@ angular.module('ygAdmin.reminders', ['ui.router'])
   'baseControllersService',
   function($scope, $state, BaseController) {
     var controller = BaseController.getEditFormController('base_reminders', 'reminders', $scope);
-    console.log($state.params.id);
     controller.init($state.params.id);
   }
 ]);

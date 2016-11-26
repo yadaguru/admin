@@ -93,13 +93,14 @@ angular.module('ygAdmin.directives.editForm',
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
         scope.id = attrs.ngModel.split('.').pop();
+
+        checkAttributes(attrs, ['optionValue', 'optionText', 'optionResource'], 'ygDropDown');
+
         scope.optionValue = attrs.optionValue;
         scope.optionText = attrs.optionText;
         scope.option = {};
 
-        console.log(attrs);
         scope.onChange = function() {
-          console.log(scope.option.value);
           ngModel.$setViewValue(scope.option.value);
         };
 
@@ -145,9 +146,9 @@ angular.module('ygAdmin.directives.editForm',
         scope.optionText = attrs.optionText;
         scope.option = {};
 
-        console.log(attrs);
+        checkAttributes(attrs, ['optionValue', 'optionText', 'optionResource'], 'ygMultiDropDown');
+
         scope.onChange = function() {
-          console.log(scope.option.value);
           ngModel.$setViewValue(scope.option.value);
         };
 
@@ -169,3 +170,11 @@ angular.module('ygAdmin.directives.editForm',
     }
   }
 ]);
+
+function checkAttributes(attrs, requiredAttrs, directive) {
+  requiredAttrs.forEach(function(attr) {
+    if (!attrs.hasOwnProperty(attr)) {
+      throw new Error(directive + ' directive requires ' + attr + ' attribute')
+    }
+  })
+}

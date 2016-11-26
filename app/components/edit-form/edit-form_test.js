@@ -1,142 +1,420 @@
 'use strict';
 
-describe('ygAdmin.directives.listTable module', function() {
-  var $state, $httpBackend, $compile, $rootScope;
+describe('ygAdmin.directives.editForm module', function() {
+  var $q, deferred, $state, $httpBackend, $compile, $rootScope, apiService;
 
-  beforeEach(module('ygAdmin.directives.listTable'));
+  beforeEach(module('ygAdmin.directives.editForm'));
   beforeEach(module('templates'));
   beforeEach(module(function($provide) {
     $state = jasmine.createSpyObj('$state', ['href']);
     $provide.value('$state', $state);
+    apiService = jasmine.createSpyObj('apiService', ['getAll']);
+    $provide.value('apiService', apiService);
   }));
 
-  beforeEach(inject(function($injector, _$compile_, _$rootScope_) {
+  beforeEach(inject(function(_$q_, $injector, _$compile_, _$rootScope_) {
+    $q = _$q_;
+    deferred = $q.defer();
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $httpBackend = $injector.get('$httpBackend');
-    $httpBackend.whenGET('components/list-table/list-table.html').respond(200, '');
+    $httpBackend.whenGET('components/edit-form/edit-form.html').respond(200, '');
   }));
 
-  xdescribe('the ygListTable directive', function() {
-    it('should render column headings at the top of the table', function() {
-      var table = $compile(
-        '<yg-list-table resource="foo" columns="[\'bar\', \'bazz\']"></yg-list-table>'
-      )($rootScope);
-
-      $rootScope.$digest();
-      expect(table.find('th').html()).toEqual('bar');
-      expect(table.find('th').next().html()).toEqual('bazz');
-    });
-
-    it('should render nested text-cells for each resource', function() {
-      $rootScope.items = [{
-        name: 'Foo',
-        value: 1
-      }, {
-        name: 'Bar',
-        value: 2
-      }];
-
-      var table = $compile(
-        '<yg-list-table resource="items" columns="[\'name\']">' +
-          '<yg-text-cell key="name"></yg-text-cell>' +
-          '<yg-text-cell key="value"></yg-text-cell>' +
-          '</yg-list-table>'
-      )($rootScope);
-
-      $rootScope.$digest();
-
-      var tbody = table.find('tbody');
-      var firstRow = tbody.find('tr');
-      var secondRow = firstRow.next();
-
-      expect(firstRow.find('td').html()).toEqual('Foo');
-      expect(firstRow.find('td').next().html()).toEqual('1');
-      expect(secondRow.find('td').html()).toEqual('Bar');
-      expect(secondRow.find('td').next().html()).toEqual('2');
-    });
-
-    it('should have separate divs for each value in an array-cell directive', function() {
-      $rootScope.items = [{
-        foods: ['pizza', 'taco']
-      }, {
-        foods: ['cake', 'pie']
-      }];
-
-
-      var table = $compile(
-        '<yg-list-table resource="items" columns="[\'Foods\']">' +
-        '<yg-array-cell key="foods"></yg-array-cell>' +
-        '</yg-list-table>'
-      )($rootScope);
-
-      $rootScope.$digest();
-
-      var tbody = table.find('tbody');
-      var firstRowCell = tbody.find('tr').find('td');
-      var secondRowCell = tbody.find('tr').next().find('td');
-
-      expect(firstRowCell.find('div').html()).toEqual('pizza');
-      expect(firstRowCell.find('div').next().html()).toEqual('taco');
-      expect(secondRowCell.find('div').html()).toEqual('cake');
-      expect(secondRowCell.find('div').next().html()).toEqual('pie');
-    });
-
-    it('should render an anchor link to the specified view with including a link-cell directive', function() {
-      $rootScope.items = [{
+  beforeEach(function() {
+    deferred.resolve({
+      data: [{
         id: 1,
-        name: 'Foo'
+        name: 'Bob'
       }, {
         id: 2,
-        name: 'Bar'
-      }];
+        name: 'Max'
+      }]
+    });
+    apiService.getAll.and.returnValue(deferred.promise);
+  });
 
-      $state.href.and.callFake(function(view, params) {
-        return '#' + view + '/' + params.id + '/';
-      });
-
-      var table = $compile(
-        '<yg-list-table resource="items" columns="[\'Foods\']">' +
-        '<yg-link-cell key="name" sref-view="items-edit" sref-param="id" sref-value="id"></yg-link-cell>' +
-        '</yg-list-table>'
+  describe('the ygEditForm directive', function() {
+    it('should render the form shell with a delete, cancel and save button', function() {
+      var form = $compile(
+        '<yg-edit-form></yg-edit-form>'
       )($rootScope);
 
       $rootScope.$digest();
-
-      var tbody = table.find('tbody');
-      var firstRowLink = tbody.find('tr').find('a');
-      var secondRowLink = tbody.find('tr').next().find('a');
-      expect(firstRowLink.html()).toEqual('Foo');
-      expect(firstRowLink.attr('href')).toEqual('#items-edit/1/');
-      expect(secondRowLink.html()).toEqual('Bar');
-      expect(secondRowLink.attr('href')).toEqual('#items-edit/2/');
+      var deleteButton = form.find('button');
+      var saveButton = deleteButton.next();
+      var cancelButton = saveButton.next();
+      expect(deleteButton.html()).toEqual('Delete');
+      expect(saveButton.html()).toEqual('Save');
+      expect(cancelButton.html()).toEqual('Cancel');
     });
 
-    it('should render formatted date when using a date-cell directive', function() {
-      $rootScope.items = [{
-        registrationDate: '2017-02-01',
-        adminDate: '2017-02-15'
-      }, {
-        registrationDate: '2017-03-01',
-        adminDate: '2017-03-15'
-      }];
-
-      var table = $compile(
-        '<yg-list-table resource="items" columns="[\'Registration Date\', \'Admin Date\']">' +
-        '<yg-date-cell key="registrationDate"></yg-date-cell>' +
-        '<yg-date-cell key="adminDate" format="YYYY/MM/DD"></yg-date-cell>' +
-        '</yg-list-table>'
+    it('should not render the delete button if the edit form is for a new item', function() {
+      $rootScope.isNew = true;
+      var form = $compile(
+        '<yg-edit-form></yg-edit-form>'
       )($rootScope);
 
       $rootScope.$digest();
+      var notDeleteButton = form.find('button');
+      expect(notDeleteButton.html()).not.toEqual('Delete')
+    });
 
-      var tbody = table.find('tbody');
-      var firstRow = tbody.find('tr');
-      var secondRow = tbody.find('tr').next();
-      expect(firstRow.find('td').html()).toEqual('2/1/2017');
-      expect(firstRow.find('td').next().html()).toEqual('2017/02/15');
-      expect(secondRow.find('td').html()).toEqual('3/1/2017');
-      expect(secondRow.find('td').next().html()).toEqual('2017/03/15');
+    it('should transclude any child elements', function() {
+      var form = $compile(
+        '<yg-edit-form><span>Foo</span></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var span = form.find('span');
+      expect(span.html()).toEqual('Foo');
+    });
+
+    it('should call deleteItem() on the scope if delete button is clicked', function() {
+      var deleteSpy = jasmine.createSpy('deleteItem');
+      $rootScope.deleteItem = deleteSpy;
+      var form = $compile(
+        '<yg-edit-form></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var deleteButton = form.find('button');
+      deleteButton.triggerHandler('click');
+      expect(deleteSpy).toHaveBeenCalled();
+    });
+
+    it('should call saveItem() on the scope if save button is clicked', function() {
+      var saveSpy = jasmine.createSpy('saveItem');
+      $rootScope.saveItem = saveSpy;
+      var form = $compile(
+        '<yg-edit-form></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var saveButton = form.find('button').next();
+      saveButton.triggerHandler('click');
+      expect(saveSpy).toHaveBeenCalled();
+    });
+
+    it('should call cancel() on the scope if cancel button is clicked', function() {
+      var cancelSpy = jasmine.createSpy('cancel');
+      $rootScope.cancel = cancelSpy;
+      var form = $compile(
+        '<yg-edit-form></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var cancelButton = form.find('button').next().next();
+      cancelButton.triggerHandler('click');
+      expect(cancelSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('the ygTextInput directive', function() {
+    it('Renders with the specified label and has the ng-model value', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-text-input label="Foo" ng-model="foo.name"></yg-text-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+      expect(input.find('input').val()).toEqual('Bob');
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-text-input label="Foo" ng-model="foo.name"></yg-text-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('name');
+      expect(input.find('input').attr('id')).toEqual('name');
+      expect(input.find('input').attr('name')).toEqual('name');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-text-input ng-model="foo.name"></yg-text-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws and error if ng-model is not provided', function() {
+      expect(function() {
+        var input = $compile(
+          '<yg-text-input></yg-text-input>'
+        )($rootScope);
+      }).toThrow();
+    });
+  });
+
+  describe('the ygRichTextBox directive', function() {
+    it('Renders with the specified label and has the ng-model value', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-rich-text-box label="Foo" ng-model="foo.name"></yg-rich-text-box>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+      expect(input.html()).toContain('Bob');
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-rich-text-box label="Foo" ng-model="foo.name"></yg-rich-text-box>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('name');
+      expect(input.html()).toContain('id="name"');
+      expect(input.html()).toContain('name="name"');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-rich-text-box ng-model="foo.name"></yg-rich-text-box>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws and error if ng-model is not provided', function() {
+      expect(function() {
+        var input = $compile(
+          '<yg-rich-text-box></yg-rich-text-box>'
+        )($rootScope);
+      }).toThrow();
+    });
+  });
+
+  describe('the ygDropDown directive', function() {
+    it('renders with the specified label.', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+    });
+
+    it('contains options from api call mapped to optionValue and optionText values', function() {
+      $rootScope.foo = {
+        id: 1
+      };
+      var input = $compile(
+        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.html()).toEqual('Bob');
+      expect(option2.html()).toEqual('Max');
+      expect(option1.attr('value')).toContain(1);
+      expect(option2.attr('value')).toContain(2);
+    });
+
+    it('selects the option equaling the ngModel value', function() {
+      $rootScope.foo = {
+        id: 1
+      };
+      var input = $compile(
+        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.attr('selected')).toEqual('selected');
+      expect(option2.attr('selected')).toBe(undefined);
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('id');
+      expect(input.find('select').attr('id')).toEqual('id');
+      expect(input.find('select').attr('name')).toEqual('id');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws an error if ng-model is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-drop-down option-resource="foos"' +
+          'option-value="id" option-text="name"></yg-drop-down>'
+        )($rootScope);
+      }).toThrow();
+    });
+
+    it('throws an error if option-value is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-text="name"></yg-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygDropDown directive requires optionValue attribute');
+    });
+
+    it('throws an error if option-value is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-value="id"></yg-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygDropDown directive requires optionText attribute');
+    });
+
+    it('throws an error if option-resource is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-drop-down ng-model="foo.id" option-text="name"' +
+          'option-value="id"></yg-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygDropDown directive requires optionResource attribute');
+    });
+  });
+  
+  describe('the ygMultiDropDown directive', function() {
+    it('renders with the specified label.', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-multi-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+    });
+
+    it('contains options from api call mapped to optionValue and optionText values', function() {
+      $rootScope.foo = {
+        id: [1, 2]
+      };
+      var input = $compile(
+        '<yg-multi-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.html()).toEqual('Bob');
+      expect(option2.html()).toEqual('Max');
+      expect(option1.attr('value')).toContain(1);
+      expect(option2.attr('value')).toContain(2);
+    });
+
+    it('selects the option equaling the ngModel value', function() {
+      $rootScope.foo = {
+        id: [1, 2]
+      };
+      var input = $compile(
+        '<yg-multi-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.attr('selected')).toEqual('selected');
+      expect(option2.attr('selected')).toBe('selected');
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-multi-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('id');
+      expect(input.find('select').attr('id')).toEqual('id');
+      expect(input.find('select').attr('name')).toEqual('id');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-multi-drop-down ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws an error if ng-model is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-multi-drop-down option-resource="foos"' +
+          'option-value="id" option-text="name"></yg-multi-drop-down>'
+        )($rootScope);
+      }).toThrow();
+    });
+
+    it('throws an error if option-value is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-multi-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-text="name"></yg-multi-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygMultiDropDown directive requires optionValue attribute');
+    });
+
+    it('throws an error if option-value is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-multi-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-value="id"></yg-multi-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygMultiDropDown directive requires optionText attribute');
+    });
+
+    it('throws an error if option-resource is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-multi-drop-down ng-model="foo.id" option-text="name"' +
+          'option-value="id"></yg-multi-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygMultiDropDown directive requires optionResource attribute');
     });
   });
 });
