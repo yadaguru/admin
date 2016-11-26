@@ -41,12 +41,41 @@ describe('ygAdmin.directives.editForm module', function() {
       )($rootScope);
 
       $rootScope.$digest();
-      var deleteButton = form.find('button');
+      var deleteButton = form.find('form').find('button');
       var saveButton = deleteButton.next();
       var cancelButton = saveButton.next();
       expect(deleteButton.html()).toEqual('Delete');
       expect(saveButton.html()).toEqual('Save');
       expect(cancelButton.html()).toEqual('Cancel');
+    });
+
+    it('should render the "title" attribute on the form', function() {
+      var form = $compile(
+        '<yg-edit-form title="Foobar"></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(form.find('h2').html()).toContain('Foobar');
+    });
+
+    it('should render the word "New" in the title of the form if new', function() {
+      $rootScope.isNew = true;
+      var form = $compile(
+        '<yg-edit-form title="Foobar"></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(form.find('h2').html()).toContain('New');
+    });
+
+    it('should render the word "Edit" in the title of the form if not new', function() {
+      $rootScope.isNew = false;
+      var form = $compile(
+        '<yg-edit-form title="Foobar"></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(form.find('h2').html()).toContain('Edit');
     });
 
     it('should not render the delete button if the edit form is for a new item', function() {
@@ -56,7 +85,7 @@ describe('ygAdmin.directives.editForm module', function() {
       )($rootScope);
 
       $rootScope.$digest();
-      var notDeleteButton = form.find('button');
+      var notDeleteButton = form.find('form').find('button');
       expect(notDeleteButton.html()).not.toEqual('Delete')
     });
 

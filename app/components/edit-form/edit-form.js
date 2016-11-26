@@ -13,6 +13,10 @@ angular.module('ygAdmin.directives.editForm',
       templateUrl: 'components/edit-form/edit-form.html',
       transclude: true,
       link: function(scope, element, attrs) {
+        scope.title = attrs.title;
+        scope.getActionTitle = function() {
+          return scope.isNew ? 'New' : 'Edit';
+        }
       }
     }
   }

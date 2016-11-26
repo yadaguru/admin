@@ -1,5 +1,4 @@
-<h2>Reminders Edit Form</h2>
-<yg-edit-form resource="base_reminders">
+<yg-edit-form resource="base_reminders" title="Reminder" ng-if="loaded">
   <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required></yg-text-input>
   <yg-drop-down
       label="Category (Required)"

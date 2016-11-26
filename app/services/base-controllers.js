@@ -41,6 +41,7 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 't
                 .catch(handleError);
             }
             $scope.isNew = true;
+            $scope.loaded = true;
             $scope[resource] = {};
           }
         };

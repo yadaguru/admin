@@ -1,6 +1,17 @@
-<form novalidate name="form">
-  <div ng-transclude></div>
-  <button ng-if="!isNew" class="btn btn-danger pull-left" ng-click="deleteItem()">Delete</button>
-  <button ng-disabled="form.$invalid" class="btn btn-primary pull-right" ng-click="saveItem()">Save</button>
-  <button class="btn btn-default pull-right" ng-click="cancel()">Cancel</button>
-</form>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h2 class="pull-left mt0 mb1em">{{ getActionTitle() }} {{ title }}</h2>
+      <button ng-disabled="form.$invalid" class="btn btn-primary mb1em pull-right" ng-click="saveItem()">Save</button>
+      <button class="btn btn-default mb1em mr1em pull-right" ng-click="cancel()">Cancel</button>
+    </div>
+  </div>
+  <div class="row">
+    <form novalidate name="form" class="col-md-8 col-md-offset-2">
+      <div ng-transclude></div>
+      <button ng-if="!isNew" class="btn btn-danger pull-left mb1em" ng-click="deleteItem()">Delete</button>
+      <button ng-disabled="form.$invalid" class="btn btn-primary mb1em pull-right" ng-click="saveItem()">Save</button>
+      <button class="btn btn-default mb1em mr1em pull-right" ng-click="cancel()">Cancel</button>
+    </form>
+  </div>
+</div>

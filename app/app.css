@@ -33,6 +33,14 @@
   margin-top: 0;
 }
 
+.mb1em {
+  margin-bottom: 1em;
+}
+
 .pointer {
   cursor: pointer;
+}
+
+.mr1em {
+  margin-right: 1em;
 }
