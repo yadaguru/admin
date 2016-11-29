@@ -1,0 +1,12 @@
+<yg-edit-form resource="timeframes" title="Timeframes" ng-if="loaded">
+  <yg-text-input label="Name (Required)" ng-model="timeframes.name" required></yg-text-input>
+  <yg-list-drop-down
+      label="Type (Required)"
+      ng-model="timeframes.type"
+      option-list="absolute: Absolute Date, relative: Relative (# of days before app date), now: Today"
+      ng-change="clearFormula()"
+      required
+  ></yg-list-drop-down>
+  <yg-text-input ng-if="timeframes.type === 'relative'" label="Formula (Required)" ng-model="timeframes.formula" required></yg-text-input>
+  <yg-date-input ng-if="timeframes.type === 'absolute'" label="Formula (Required)" ng-model="timeframes.formula" required></yg-date-input>
+</yg-edit-form>

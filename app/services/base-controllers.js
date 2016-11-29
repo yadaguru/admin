@@ -11,9 +11,9 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 't
     function(api, error, $state, prompt, toastr) {
       function getListController(resource, $scope) {
         return {
-          init: function() {
+          init: function(callback) {
             getItems()
-              .then(processItems)
+              .then(processItems(callback))
               .catch(error.handleHttpError)
           }
         };
@@ -22,22 +22,30 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 't
           return api.getAll(resource);
         }
 
-        function processItems(response) {
-          $scope[resource] = response.data;
-          $scope.loaded = true;
+        function processItems(callback) {
+          return function(response) {
+            if (typeof callback === 'function') {
+              $scope[resource] = response.data.map(function(item) {
+                return callback(item);
+              });
+            } else {
+              $scope[resource] = response.data;
+            }
+            $scope.loaded = true;
+          };
         }
       }
 
       function getEditFormController(resource, parentState, $scope) {
         return {
-          init: function(id) {
+          init: function(id, callback) {
             $scope.saveItem = saveItem;
             $scope.deleteItem = deleteItem;
             $scope.cancel = cancel;
             if (id) {
               $scope.isNew = false;
               return getItem(id)
-                .then(processItem)
+                .then(processItem(callback))
                 .catch(handleError);
             }
             $scope.isNew = true;
@@ -72,9 +80,15 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 't
           $state.go(parentState);
         }
 
-        function processItem(response) {
-          $scope[resource] = response.data[0];
-          $scope.loaded = true;
+        function processItem(callback) {
+          return function(response) {
+            if (typeof callback === 'function') {
+              $scope[resource] = callback(response.data[0]);
+            } else {
+              $scope[resource] = response.data[0];
+            }
+            $scope.loaded = true;
+          }
         }
 
         function handleSuccessfulSave(res) {
@@ -88,7 +102,16 @@ angular.module('ygAdmin.services.baseControllers', ['ui.router', 'ngAnimate', 't
         }
 
         function handleError(err) {
-          toastr.error('There was an error processing your request. Please try again.');
+          var message;
+          switch (err.status) {
+            case 409:
+              message = 'This item cannot be deleted because it is currently in use. Please unassign ' +
+                'all uses of this item and try again';
+              break;
+            default:
+              message = 'There was an error processing your request. Please try again.';
+          }
+          toastr.error(message);
           error.handleHttpError(err);
         }
       }

@@ -29,9 +29,11 @@ describe('ygAdmin.reminders module', function() {
         }
       }
     };
+
     $state = {
       params: {}
     };
+
     $provide.value('$state', $state);
     $provide.value('baseControllersService', baseControllersService);
   }));

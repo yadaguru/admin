@@ -56,6 +56,21 @@ describe('The ygAdmin.services.baseControllers service', function() {
       rootScope.$apply();
       expect(errorSpy.handleHttpError).toHaveBeenCalledWith('some error');
     });
+
+    it('should process each item with a callback passed into the init method', function() {
+      var responseData = [{foo: 'foo', bar: 'bar'}];
+      var resp = {data: responseData};
+      deferred.resolve(resp);
+      apiSpy.getAll.and.returnValue(deferred.promise);
+
+      controller.init(function(item) {
+        item.foo = item.foo + 's';
+        item.bar = item.bar + 's';
+        return item
+      });
+      rootScope.$apply();
+      expect(scope).toEqual({foo: [{foo: 'foos', bar: 'bars'}], loaded: true});
+    })
   });
 
   describe('getEditFormController method', function() {
@@ -81,7 +96,22 @@ describe('The ygAdmin.services.baseControllers service', function() {
       expect(scope.foo).toEqual(responseData[0]);
       expect(scope.loaded).toBe(true);
       expect(apiSpy.getOne).toHaveBeenCalledWith('foo', 1);
-    })
+    });
+
+    it('should process the loaded item with a callback passed into the init method', function() {
+      var responseData = [{foo: 'foo', bar: 'bar'}];
+      var resp = {data: responseData};
+      deferred.resolve(resp);
+      apiSpy.getOne.and.returnValue(deferred.promise);
+
+      controller.init(1, function(item) {
+        item.foo = item.foo + 's';
+        item.bar = item.bar + 's';
+        return item
+      });
+      rootScope.$apply();
+      expect(scope.foo).toEqual({foo: 'foos', bar: 'bars'});
+    });
 
     it('should handle errors if the api request fails', function() {
       deferred.reject('some error');
@@ -232,6 +262,32 @@ describe('The ygAdmin.services.baseControllers service', function() {
       expect(errorSpy.handleHttpError).toHaveBeenCalledWith('some error');
       expect(toastrSpy.error).toHaveBeenCalledWith(
         'There was an error processing your request. Please try again.'
+      );
+    });
+
+    it('should handle conflict errors specially when deleting', function() {
+      var responseData = [{id: 1, foo: 'foo', bar: 'bar'}];
+      var resp = {data: responseData};
+      deferred.resolve(resp);
+      apiSpy.getOne.and.returnValue(deferred.promise);
+
+      var promptDeferred = $q.defer();
+      promptDeferred.resolve();
+      promptSpy.and.returnValue(promptDeferred.promise);
+
+      var deleteDeferred = $q.defer();
+      deleteDeferred.reject({status: 409});
+      apiSpy.delete.and.returnValue(deleteDeferred.promise);
+
+      controller.init(1);
+      rootScope.$apply();
+      scope.deleteItem();
+      rootScope.$apply();
+
+      expect(errorSpy.handleHttpError).toHaveBeenCalledWith({status: 409});
+      expect(toastrSpy.error).toHaveBeenCalledWith(
+        'This item cannot be deleted because it is currently in use. Please unassign ' +
+        'all uses of this item and try again'
       );
     });
 

@@ -1,13 +1,13 @@
 <yg-edit-form resource="base_reminders" title="Reminder" ng-if="loaded">
   <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required></yg-text-input>
-  <yg-drop-down
+  <yg-resource-drop-down
       label="Category (Required)"
       ng-model="base_reminders.categoryId"
       option-resource="categories"
       option-value="id"
       option-text="name"
       required
-  ></yg-drop-down>
+  ></yg-resource-drop-down>
   <yg-multi-drop-down
       label="Timeframes (Required)"
       ng-model="base_reminders.timeframeIds"

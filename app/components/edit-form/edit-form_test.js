@@ -181,7 +181,143 @@ describe('ygAdmin.directives.editForm module', function() {
       }).toThrow();
     });
   });
+  
+  describe('the ygDateInput directive', function() {
+    it('Renders with the specified label and has the ng-model value', function() {
+      var date = new Date();
+      $rootScope.foo = {
+        date: date
+      };
+      var input = $compile(
+        '<yg-date-input label="Foo" ng-model="foo.date"></yg-date-input>'
+      )($rootScope);
 
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+      expect(input.find('input').val()).toEqual(date.toString());
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-date-input label="Foo" ng-model="foo.name"></yg-date-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('name');
+      expect(input.find('input').attr('id')).toEqual('name');
+      expect(input.find('input').attr('name')).toEqual('name');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-date-input ng-model="foo.name"></yg-date-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws and error if ng-model is not provided', function() {
+      expect(function() {
+        var input = $compile(
+          '<yg-date-input></yg-date-input>'
+        )($rootScope);
+      }).toThrow();
+    });
+  });
+
+  describe('the ygListDropDown directive', function() {
+    it('renders with the specified label.', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
+        'option-list="1: foo, 2: bar"></yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').text()).toEqual('Foo');
+    });
+
+    it('contains options parsed from the option-list attribute', function() {
+      $rootScope.foo = {
+        id: '1'
+      };
+      var input = $compile(
+        '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
+        'option-list="1: Bob, 2: Max"></yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.html()).toEqual('Bob');
+      expect(option2.html()).toEqual('Max');
+      expect(option1.attr('value')).toContain(1);
+      expect(option2.attr('value')).toContain(2);
+    });
+
+    it('selects the option equaling the ngModel value', function() {
+      $rootScope.foo = {
+        id: '1'
+      };
+      var input = $compile(
+        '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
+        'option-list="1: Bob, 2: Max"></yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var option1 = input.find('option');
+      var option2 = option1.next();
+
+      // See beforeEach at top of file for options api call response
+      expect(option1.attr('selected')).toEqual('selected');
+      expect(option2.attr('selected')).toBe(undefined);
+    });
+
+    it('has a name and id property that is the same as the item object property', function() {
+      var input = $compile(
+        '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
+        'option-list="1: Bob, 2: Max"></yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label').attr('for')).toEqual('id');
+      expect(input.find('select').attr('id')).toEqual('id');
+      expect(input.find('select').attr('name')).toEqual('id');
+    });
+
+    it('does not show the label if there is no label attribute', function() {
+      var input = $compile(
+        '<yg-list-drop-down ng-model="foo.id" ' +
+        'option-list="1: Bob, 2: Max"></yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('label')).toEqual({});
+    });
+
+    it('throws an error if ng-model is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-list-drop-down label="Foo" ' +
+          'option-list="1: Bob, 2: Max"></yg-list-drop-down>'
+        )($rootScope);
+      }).toThrow();
+    });
+
+    it('throws an error if option-list is not provided', function() {
+      expect(function() {
+        $compile(
+          '<yg-list-drop-down label="Foo" ng-model="foo.id"></yg-list-drop-down>'
+        )($rootScope);
+      }).toThrowError('ygListDropDown directive requires optionList attribute');
+    });
+  });
+  
   describe('the ygRichTextBox directive', function() {
     it('Renders with the specified label and has the ng-model value', function() {
       $rootScope.foo = {
@@ -225,14 +361,14 @@ describe('ygAdmin.directives.editForm module', function() {
     });
   });
 
-  describe('the ygDropDown directive', function() {
+  describe('the ygResourceDropDown directive', function() {
     it('renders with the specified label.', function() {
       $rootScope.foo = {
         name: 'Bob'
       };
       var input = $compile(
-        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
-        'option-value="id" option-text="name"></yg-drop-down>'
+        '<yg-resource-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-resource-drop-down>'
       )($rootScope);
 
       $rootScope.$digest();
@@ -244,8 +380,8 @@ describe('ygAdmin.directives.editForm module', function() {
         id: 1
       };
       var input = $compile(
-        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
-        'option-value="id" option-text="name"></yg-drop-down>'
+        '<yg-resource-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-resource-drop-down>'
       )($rootScope);
 
       $rootScope.$digest();
@@ -264,8 +400,8 @@ describe('ygAdmin.directives.editForm module', function() {
         id: 1
       };
       var input = $compile(
-        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
-        'option-value="id" option-text="name"></yg-drop-down>'
+        '<yg-resource-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-resource-drop-down>'
       )($rootScope);
 
       $rootScope.$digest();
@@ -279,8 +415,8 @@ describe('ygAdmin.directives.editForm module', function() {
 
     it('has a name and id property that is the same as the item object property', function() {
       var input = $compile(
-        '<yg-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
-        'option-value="id" option-text="name"></yg-drop-down>'
+        '<yg-resource-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-resource-drop-down>'
       )($rootScope);
 
       $rootScope.$digest();
@@ -291,8 +427,8 @@ describe('ygAdmin.directives.editForm module', function() {
 
     it('does not show the label if there is no label attribute', function() {
       var input = $compile(
-        '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
-        'option-value="id" option-text="name"></yg-drop-down>'
+        '<yg-resource-drop-down ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name"></yg-resource-drop-down>'
       )($rootScope);
 
       $rootScope.$digest();
@@ -302,8 +438,8 @@ describe('ygAdmin.directives.editForm module', function() {
     it('throws an error if ng-model is not provided', function() {
       expect(function() {
         $compile(
-          '<yg-drop-down option-resource="foos"' +
-          'option-value="id" option-text="name"></yg-drop-down>'
+          '<yg-resource-drop-down option-resource="foos"' +
+          'option-value="id" option-text="name"></yg-resource-drop-down>'
         )($rootScope);
       }).toThrow();
     });
@@ -311,28 +447,28 @@ describe('ygAdmin.directives.editForm module', function() {
     it('throws an error if option-value is not provided', function() {
       expect(function() {
         $compile(
-          '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
-          'option-text="name"></yg-drop-down>'
+          '<yg-resource-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-text="name"></yg-resource-drop-down>'
         )($rootScope);
-      }).toThrowError('ygDropDown directive requires optionValue attribute');
+      }).toThrowError('ygResourceDropDown directive requires optionValue attribute');
     });
 
     it('throws an error if option-value is not provided', function() {
       expect(function() {
         $compile(
-          '<yg-drop-down ng-model="foo.id" option-resource="foos"' +
-          'option-value="id"></yg-drop-down>'
+          '<yg-resource-drop-down ng-model="foo.id" option-resource="foos"' +
+          'option-value="id"></yg-resource-drop-down>'
         )($rootScope);
-      }).toThrowError('ygDropDown directive requires optionText attribute');
+      }).toThrowError('ygResourceDropDown directive requires optionText attribute');
     });
 
     it('throws an error if option-resource is not provided', function() {
       expect(function() {
         $compile(
-          '<yg-drop-down ng-model="foo.id" option-text="name"' +
-          'option-value="id"></yg-drop-down>'
+          '<yg-resource-drop-down ng-model="foo.id" option-text="name"' +
+          'option-value="id"></yg-resource-drop-down>'
         )($rootScope);
-      }).toThrowError('ygDropDown directive requires optionResource attribute');
+      }).toThrowError('ygResourceDropDown directive requires optionResource attribute');
     });
   });
   
