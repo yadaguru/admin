@@ -20,16 +20,19 @@
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body class="ng-cloak">
-  <ul class="menu">
-    <li><a ui-sref="reminders">Reminders</a></li>
-    <li><a ui-sref="categories">Categories</a></li>
-    <li><a ui-sref="timeframes">Timeframes</a></li>
-    <li><a ui-sref="tests">Tests</a></li>
-    <li><a ui-sref="testDates">Test Dates</a></li>
-    <li><a ui-sref="contentItems">Content Items</a></li>
-    <li ng-if="!isAuthorized()"><a ui-sref="login">Login</a></li>
-    <li ng-if="isAuthorized()"><a href="#" ng-click="logout()">Logout</a></li>
-  </ul>
+  <nav class="navbar navbar-light bg-faded">
+    <a ui-sref="reminders" class="navbar-brand">YadaGuru Administration</a>
+    <ul class="nav navbar-nav">
+      <li class="nav-item"><a class="nav-link" ui-sref="reminders">Reminders</a></li>
+      <li class="nav-item"><a class="nav-link" ui-sref="categories">Categories</a></li>
+      <li class="nav-item"><a class="nav-link" ui-sref="timeframes">Timeframes</a></li>
+      <li class="nav-item"><a class="nav-link" ui-sref="tests">Tests</a></li>
+      <li class="nav-item"><a class="nav-link" ui-sref="testDates">Test Dates</a></li>
+      <li class="nav-item"><a class="nav-link" ui-sref="contentItems">Content Items</a></li>
+      <li class="nav-item" ng-if="!isAuthorized()"><a class="nav-link" ui-sref="login">Login</a></li>
+      <li class="nav-item" ng-if="isAuthorized()"><a class="nav-link" href="#" ng-click="logout()">Logout</a></li>
+    </ul>
+  </nav>
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
