@@ -14,17 +14,21 @@ angular.module('ygAdmin.directives.listTable', ['angularMoment', 'ui.router'])
         title: '@',
         items: '@',
         item: '@',
-        editView: '@'
+        editView: '@',
+        editViewParam: '@'
       },
       templateUrl: 'components/list-table/list-table.html',
       transclude: true,
       controller: [function(){}],
       link: function(scope) {
+        scope.editViewParam = scope.editViewParam || 'id';
         scope.newItem = function() {
           $state.go(scope.editView);
         };
         scope.editItem = function(item) {
-          $state.go(scope.editView, {id: item.id})
+          var params = {};
+          params[scope.editViewParam] = item[scope.editViewParam];
+          $state.go(scope.editView, params)
         }
       }
     }
@@ -37,6 +41,22 @@ angular.module('ygAdmin.directives.listTable', ['angularMoment', 'ui.router'])
       restrict: 'E',
       require: '^ygListTable',
       template: '<td>{{ value }}</td>',
+      scope: true,
+      replace: true,
+      controller: ['$scope', function($scope) {}],
+      link: function($scope, element, attrs) {
+        $scope.value = $scope.$parent.$parent.item[attrs.key];
+      }
+    }
+  }
+])
+
+.directive('ygRichTextCell', [
+  function() {
+    return {
+      restrict: 'E',
+      require: '^ygListTable',
+      template: '<td ng-bind-html="value"></td>',
       scope: true,
       replace: true,
       controller: ['$scope', function($scope) {}],

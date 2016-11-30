@@ -8,6 +8,12 @@ angular.module('ygAdmin.tests', ['ui.router'])
     controller: 'TestsCtrl',
     url: '/tests'
   });
+
+  $stateProvider.state('testsEdit', {
+    templateUrl: 'tests/testsEdit.html',
+    controller: 'TestsEditCtrl',
+    url: '/tests/edit/:id'
+  });
 })
 
 .controller('TestsCtrl', [
@@ -16,4 +22,14 @@ angular.module('ygAdmin.tests', ['ui.router'])
   function($scope, BaseController) {
     var controller = BaseController.getListController('tests', $scope);
     controller.init();
-}]);
+}])
+
+.controller('TestsEditCtrl', [
+  '$scope',
+  '$state',
+  'baseControllersService',
+  function($scope, $state, BaseController) {
+    var controller = BaseController.getEditFormController('tests', 'tests', $scope);
+    controller.init($state.params.id);
+  }
+]);

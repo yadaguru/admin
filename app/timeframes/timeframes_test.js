@@ -17,13 +17,6 @@ describe('ygAdmin.timeframes module', function() {
       getListController: function() {
         return {
           init: function(callback) {
-            var timeframes = [{
-              type: 'absolute',
-              formula: '2017-02-01'
-            }, {
-              type: 'relative',
-              formula: '90'
-            }];
             $scope.timeframes = timeframeResponse.data.map(function(timeframe) {
               return callback(timeframe);
             });

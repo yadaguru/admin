@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ygAdmin.directives.listTable module', function() {
-  var $state, $httpBackend, $compile, $rootScope;
+  var $state, $httpBackend, $compile, $rootScope, $sce;
 
   beforeEach(module('ygAdmin.directives.listTable'));
   beforeEach(module('templates'));
@@ -10,9 +10,10 @@ describe('ygAdmin.directives.listTable module', function() {
     $provide.value('$state', $state);
   }));
 
-  beforeEach(inject(function($injector, _$compile_, _$rootScope_) {
+  beforeEach(inject(function($injector, _$compile_, _$rootScope_, _$sce_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
+    $sce = _$sce_;
     $httpBackend = $injector.get('$httpBackend');
     $httpBackend.whenGET('components/list-table/list-table.html').respond(200, '');
   }));
@@ -81,6 +82,31 @@ describe('ygAdmin.directives.listTable module', function() {
       expect($state.go).toHaveBeenCalledWith('foosEdit', {id: 2});
     });
 
+    it('should allow a custom edit view parameter to be declared on the directive', function() {
+      $rootScope.items = [{
+        id: 1,
+        name: 'Foo'
+      }, {
+        id: 2,
+        name: 'Bar'
+      }];
+
+      var table = $compile(
+        '<yg-list-table resource="items" columns="[\'name\']" edit-view="foosEdit" edit-view-param="name">' +
+        '<yg-text-cell key="name"></yg-text-cell>' +
+        '</yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+
+      var tbody = table.find('tbody');
+      var rows = tbody.find('tr');
+
+      rows.triggerHandler('click');
+      expect($state.go).toHaveBeenCalledWith('foosEdit', {name: 'Foo'});
+      expect($state.go).toHaveBeenCalledWith('foosEdit', {name: 'Bar'});
+    });
+
     it('should render nested text-cells for each resource', function() {
       $rootScope.items = [{
         name: 'Foo',
@@ -107,6 +133,28 @@ describe('ygAdmin.directives.listTable module', function() {
       expect(firstRow.find('td').next().html()).toEqual('1');
       expect(secondRow.find('td').html()).toEqual('Bar');
       expect(secondRow.find('td').next().html()).toEqual('2');
+    });
+
+    it('should not escape HTML on a yg-rich-text-cell element', function() {
+      $rootScope.items = [{
+        plain: $sce.trustAsHtml('<b>Foo</b>'),
+        rich: $sce.trustAsHtml('<b>Bar</b>')
+      }];
+
+      var table = $compile(
+        '<yg-list-table resource="items" columns="[\'name\']">' +
+        '<yg-text-cell key="plain"></yg-text-cell>' +
+        '<yg-rich-text-cell key="rich"></yg-rich-text-cell>' +
+        '</yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+
+      var tbody = table.find('tbody');
+      var firstRow = tbody.find('tr');
+
+      expect(firstRow.find('td').html()).toEqual('&lt;b&gt;Foo&lt;/b&gt;');
+      expect(firstRow.find('td').next().html()).toEqual('<b>Bar</b>');
     });
 
     it('should have separate divs for each value in an array-cell directive', function() {

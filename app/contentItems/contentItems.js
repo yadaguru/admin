@@ -8,6 +8,12 @@ angular.module('ygAdmin.contentItems', ['ui.router'])
     controller: 'ContentItemsCtrl',
     url: '/content_items'
   });
+
+  $stateProvider.state('contentItemsEdit', {
+    templateUrl: 'contentItems/contentItemsEdit.html',
+    controller: 'ContentItemsEditCtrl',
+    url: '/content_items/edit/:name'
+  });
 })
 
 .controller('ContentItemsCtrl', [
@@ -16,4 +22,14 @@ angular.module('ygAdmin.contentItems', ['ui.router'])
   function($scope, BaseController) {
     var controller = BaseController.getListController('content_items', $scope);
     controller.init();
-}]);
+  }])
+
+.controller('ContentItemsEditCtrl', [
+  '$scope',
+  '$state',
+  'baseControllersService',
+  function($scope, $state, BaseController) {
+    var controller = BaseController.getEditFormController('content_items', 'contentItems', $scope);
+    controller.init($state.params.name);
+  }
+]);

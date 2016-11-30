@@ -13,7 +13,7 @@ angular.module('ygAdmin.categories', ['ui.router'])
     templateUrl: 'categories/categoriesEdit.html',
     controller: 'CategoriesEditCtrl',
     url: '/categories/edit/:id'
-  })
+  });
 })
 
 .controller('CategoriesCtrl', [

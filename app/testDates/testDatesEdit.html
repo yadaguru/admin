@@ -1,0 +1,12 @@
+<yg-edit-form resource="test_dates" title="Test Dates" ng-if="loaded">
+  <yg-resource-drop-down
+      label="Test Type (Required)"
+      ng-model="test_dates.testId"
+      option-resource="tests"
+      option-value="id"
+      option-text="type"
+      required
+  ></yg-resource-drop-down>
+  <yg-date-input label="Registration Date (Required)" ng-model="test_dates.registrationDate" required></yg-date-input>
+  <yg-date-input label="Administration Date (Required)" ng-model="test_dates.adminDate" required></yg-date-input>
+</yg-edit-form>
