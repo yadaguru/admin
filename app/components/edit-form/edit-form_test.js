@@ -164,6 +164,18 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(input.find('input').attr('name')).toEqual('name');
     });
 
+    it('passes transcluded text as a hint', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-text-input label="Foo" ng-model="foo.name">Hint</yg-text-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').text()).toEqual('Hint');
+    });
+
     it('does not show the label if there is no label attribute', function() {
       var input = $compile(
         '<yg-text-input ng-model="foo.name"></yg-text-input>'
@@ -206,6 +218,19 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(input.find('label').attr('for')).toEqual('name');
       expect(input.find('input').attr('id')).toEqual('name');
       expect(input.find('input').attr('name')).toEqual('name');
+    });
+
+    it('passes transcluded text as a hint', function() {
+      var date = new Date();
+      $rootScope.foo = {
+        date: date
+      };
+      var input = $compile(
+        '<yg-date-input label="Foo" ng-model="foo.date">Hint</yg-date-input>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').text()).toEqual('Hint');
     });
 
     it('does not show the label if there is no label attribute', function() {
@@ -278,6 +303,19 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(option2.attr('selected')).toBe(undefined);
     });
 
+    it('renders transcluded text as a hint', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
+        'option-list="1: foo, 2: bar">Hint</yg-list-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').text()).toEqual('Hint');
+    });
+
     it('has a name and id property that is the same as the item object property', function() {
       var input = $compile(
         '<yg-list-drop-down label="Foo" ng-model="foo.id" ' +
@@ -343,6 +381,18 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(input.html()).toContain('name="name"');
     });
 
+    it('Renders transcluded text as a hint', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-rich-text-box label="Foo" ng-model="foo.name">Hint</yg-rich-text-box>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').html()).toContain('Hint');
+    });
+
     it('does not show the label if there is no label attribute', function() {
       var input = $compile(
         '<yg-rich-text-box ng-model="foo.name"></yg-rich-text-box>'
@@ -393,6 +443,19 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(option2.html()).toEqual('Max');
       expect(option1.attr('value')).toContain(1);
       expect(option2.attr('value')).toContain(2);
+    });
+
+    it('renders transcluded text as a hint', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-resource-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name">Hint</yg-resource-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').text()).toEqual('Hint');
     });
 
     it('selects the option equaling the ngModel value', function() {
@@ -504,6 +567,19 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(option2.html()).toEqual('Max');
       expect(option1.attr('value')).toContain(1);
       expect(option2.attr('value')).toContain(2);
+    });
+
+    it('renders transcluded text as a hint', function() {
+      $rootScope.foo = {
+        name: 'Bob'
+      };
+      var input = $compile(
+        '<yg-multi-drop-down label="Foo" ng-model="foo.id" option-resource="foos"' +
+        'option-value="id" option-text="name">Hint</yg-multi-drop-down>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(input.find('p').text()).toEqual('Hint');
     });
 
     it('selects the option equaling the ngModel value', function() {

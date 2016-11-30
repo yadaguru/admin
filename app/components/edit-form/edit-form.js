@@ -31,9 +31,11 @@ angular.module('ygAdmin.directives.editForm',
         '<div class="form-group">' +
           '<label class="control-label" ng-if="label" for="{{ id }}">{{ label }}</label>' +
           '<input type="text" class="form-control" ng-model="value" id="{{ id }}" name="{{ id }}" ng-change="onChange()"/>' +
+          '<p class="text-info"><ng-transclude></ng-transclude></p>' +
         '</div>',
       scope: true,
       replace: true,
+      transclude: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
         scope.id = attrs.ngModel.split('.').pop();
@@ -65,9 +67,12 @@ angular.module('ygAdmin.directives.editForm',
       '<span class="input-group-btn">' +
       '<button type="button" class="btn btn-default" ng-click="openCalendar()">' +
       '<i class="glyphicon glyphicon-calendar"></i>' +
-      '</button></span></p></div>',
+      '</button></span></p>' +
+      '<p class="text-info"><ng-transclude></ng-transclude></p>' +
+      '</div>',
       scope: true,
       replace: true,
+      transclude: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
         scope.id = attrs.ngModel.split('.').pop();
@@ -110,9 +115,11 @@ angular.module('ygAdmin.directives.editForm',
       template:
       '<div class="form-group">' +
       '<label class="control-label" ng-if="label" for="{{ id }}">{{ label }}</label>' +
+      '<p class="text-info"><ng-transclude></ng-transclude></p>' +
       '<div text-angular ng-model="value" id="{{ id }}" name="{{ id }}" ng-change="onChange()"/>' +
       '</div>',
       replace: true,
+      transclude: true,
       scope: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
@@ -141,8 +148,10 @@ angular.module('ygAdmin.directives.editForm',
       '<select class="form-control" ng-model="option.value" id="{{ id }}" name="{{ id }}" ng-change="onChange()"' +
       'ng-options="option.value as option.text for option in options">' +
       '</select>' +
+      '<p class="text-info"><ng-transclude></ng-transclude></p>' +
       '</div>',
       replace: true,
+      transclude: true,
       scope: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
@@ -189,8 +198,10 @@ angular.module('ygAdmin.directives.editForm',
       '<select ng-if="loaded" class="form-control" ng-model="option.value" id="{{ id }}" name="{{ id }}" ng-change="onChange()"' +
       'ng-options="option[optionValue] as option[optionText] for option in options">' +
       '</select>' +
+      '<p class="text-info"><ng-transclude></ng-transclude></p>' +
       '</div>',
       replace: true,
+      transclude: true,
       scope: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;
@@ -238,8 +249,10 @@ angular.module('ygAdmin.directives.editForm',
       '<select ng-if="loaded" class="form-control" ng-model="option.value" id="{{ id }}" name="{{ id }}" ng-change="onChange()"' +
       'ng-options="option[optionValue] as option[optionText] for option in options" multiple>' +
       '</select>' +
+      '<p class="text-info"><ng-transclude></ng-transclude></p>' +
       '</div>',
       replace: true,
+      transclude: true,
       scope: true,
       link: function(scope, element, attrs, ngModel) {
         scope.label = attrs.label;

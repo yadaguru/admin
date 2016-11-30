@@ -1,4 +1,7 @@
 <yg-edit-form resource="content_items" title="Content Items" ng-if="loaded">
-  <yg-text-input label="Name (Required)" ng-model="content_items.name" required></yg-text-input>
+  <yg-text-input label="Name (Required)" ng-model="content_items.name" required>
+    <strong>IMPORTANT NOTE: </strong> The names of the content items are referenced in the front-end app code. Changing
+    the name here will cause the help link on the front-end to break.
+  </yg-text-input>
   <yg-rich-text-box label="Content (Required)" ng-model="content_items.content" required></yg-rich-text-box>
 </yg-edit-form>

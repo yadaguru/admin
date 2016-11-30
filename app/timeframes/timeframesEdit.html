@@ -1,12 +1,32 @@
 <yg-edit-form resource="timeframes" title="Timeframes" ng-if="loaded">
-  <yg-text-input label="Name (Required)" ng-model="timeframes.name" required></yg-text-input>
+  <yg-text-input label="Name (Required)" ng-model="timeframes.name" required>
+    Internal name for timeframe
+  </yg-text-input>
   <yg-list-drop-down
       label="Type (Required)"
       ng-model="timeframes.type"
       option-list="absolute: Absolute Date, relative: Relative (# of days before app date), now: Today"
       ng-change="clearFormula()"
       required
-  ></yg-list-drop-down>
-  <yg-text-input ng-if="timeframes.type === 'relative'" label="Formula (Required)" ng-model="timeframes.formula" required></yg-text-input>
-  <yg-date-input ng-if="timeframes.type === 'absolute'" label="Formula (Required)" ng-model="timeframes.formula" required></yg-date-input>
+  >
+    Possible timeframe types:
+    <ul>
+      <li>
+        <strong>Absolute</strong> - Reminder will be grouped/sent on a specific date.
+      </li>
+      <li>
+        <strong>Relative</strong> - Reminder will be grouped/sent X days before the application due date
+      </li>
+      <li>
+        <strong>Today</strong> - Reminder will always display in the 'Today' group. NOTE: reminders with this timeframe
+        will not be sent to the user.
+      </li>
+    </ul>
+  </yg-list-drop-down>
+  <yg-text-input ng-if="timeframes.type === 'relative'" label="Formula (Required)" ng-model="timeframes.formula" required>
+    Enter a number <em>X</em> days before the due date.
+  </yg-text-input>
+  <yg-date-input ng-if="timeframes.type === 'absolute'" label="Formula (Required)" ng-model="timeframes.formula" required>
+    Select an absolute date for the timeframe.
+  </yg-date-input>
 </yg-edit-form>

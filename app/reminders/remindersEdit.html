@@ -1,5 +1,7 @@
 <yg-edit-form resource="base_reminders" title="Reminder" ng-if="loaded">
-  <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required></yg-text-input>
+  <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required>
+    Internal name for reference (does not appear in UI)
+  </yg-text-input>
   <yg-resource-drop-down
       label="Category (Required)"
       ng-model="base_reminders.categoryId"
@@ -7,7 +9,10 @@
       option-value="id"
       option-text="name"
       required
-  ></yg-resource-drop-down>
+  >
+    Internal category for organization (does not appear in UI). Categories can be edited
+    <strong><a ui-sref="categories">here</a></strong>.
+  </yg-resource-drop-down>
   <yg-multi-drop-down
       label="Timeframes (Required)"
       ng-model="base_reminders.timeframeIds"
@@ -15,9 +20,22 @@
       option-value="id"
       option-text="name"
       required
-  ></yg-multi-drop-down>
-  <yg-rich-text-box label="Message (Required)" ng-model="base_reminders.message" required></yg-rich-text-box>
+  >
+    Ctrl/Cmd click to select multiple timeframes. Timeframes can be edited
+    <strong><a ui-sref="timeframes">here</a></strong>.
+  </yg-multi-drop-down>
+  <yg-rich-text-box label="Message (Required)" ng-model="base_reminders.message" required>
+    The following variables are available on all rich-text fields on this form:
+    <ul>
+      <li><code>%APPLICATION_DATE%</code> - date the application is due</li>
+      <li><code>%REMINDER_DATE%</code> - date of the current reminder</li>
+      <li><code>%SCHOOL%</code> - name of school</li>
+    </ul>
+  </yg-rich-text-box>
   <yg-rich-text-box label="Detail (Required)" ng-model="base_reminders.detail" required></yg-rich-text-box>
-  <yg-rich-text-box label="Late Message (Optional)" ng-model="base_reminders.lateMessage"></yg-rich-text-box>
+  <yg-rich-text-box label="Late Message (Optional)" ng-model="base_reminders.lateMessage">
+    <em>NOTE: </em> Late message/detail displays when reminders are overdue. If no message/detail is specified, the
+    default message/detail will be used.
+  </yg-rich-text-box>
   <yg-rich-text-box label="Late Detail (Optional)" ng-model="base_reminders.lateDetail"></yg-rich-text-box>
 </yg-edit-form>

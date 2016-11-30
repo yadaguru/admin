@@ -6,7 +6,13 @@
       option-value="id"
       option-text="type"
       required
-  ></yg-resource-drop-down>
-  <yg-date-input label="Registration Date (Required)" ng-model="test_dates.registrationDate" required></yg-date-input>
-  <yg-date-input label="Administration Date (Required)" ng-model="test_dates.adminDate" required></yg-date-input>
+  >
+    Tests can be edited <strong><a ui-sref="tests">here</a></strong>.
+  </yg-resource-drop-down>
+  <yg-date-input label="Registration Date (Required)" ng-model="test_dates.registrationDate" required>
+    Date the test registration is due.
+  </yg-date-input>
+  <yg-date-input label="Administration Date (Required)" ng-model="test_dates.adminDate" required>
+    Date the test will be administered.
+  </yg-date-input>
 </yg-edit-form>
