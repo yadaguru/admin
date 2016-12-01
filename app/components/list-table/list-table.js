@@ -15,7 +15,8 @@ angular.module('ygAdmin.directives.listTable', ['angularMoment', 'ui.router'])
         items: '@',
         item: '@',
         editView: '@',
-        editViewParam: '@'
+        editViewParam: '@',
+        hideNewButton: '@'
       },
       templateUrl: 'components/list-table/list-table.html',
       transclude: true,

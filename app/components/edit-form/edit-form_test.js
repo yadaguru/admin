@@ -89,6 +89,16 @@ describe('ygAdmin.directives.editForm module', function() {
       expect(notDeleteButton.html()).not.toEqual('Delete')
     });
 
+    it('should not render the delete button if hide-delete-button attribute is true', function() {
+      var form = $compile(
+        '<yg-edit-form hide-delete-button="true"></yg-edit-form>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      var notDeleteButton = form.find('form').find('button');
+      expect(notDeleteButton.html()).not.toEqual('Delete')
+    });
+
     it('should transclude any child elements', function() {
       var form = $compile(
         '<yg-edit-form><span>Foo</span></yg-edit-form>'

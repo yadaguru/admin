@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <h2 class="mt0 pull-left">{{ items }}</h2>
-    <button ng-click="newItem()" class="btn btn-primary pull-right">New {{ item }}</button>
+    <button ng-if="!hideNewButton" ng-click="newItem()" class="btn btn-primary pull-right">New {{ item }}</button>
   </div>
   <table class="table table-striped table-hover row">
     <thead>

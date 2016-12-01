@@ -9,7 +9,7 @@
   <div class="row">
     <form novalidate name="form" class="col-md-8 col-md-offset-2">
       <div ng-transclude></div>
-      <button ng-if="!isNew" class="btn btn-danger pull-left mb1em" ng-click="deleteItem()">Delete</button>
+      <button ng-if="!isNew && !hideDeleteButton" class="btn btn-danger pull-left mb1em" ng-click="deleteItem()">Delete</button>
       <button ng-disabled="form.$invalid" class="btn btn-primary mb1em pull-right" ng-click="saveItem()">Save</button>
       <button class="btn btn-default mb1em mr1em pull-right" ng-click="cancel()">Cancel</button>
     </form>

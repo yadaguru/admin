@@ -14,6 +14,7 @@ angular.module('ygAdmin.directives.editForm',
       transclude: true,
       link: function(scope, element, attrs) {
         scope.title = attrs.title;
+        scope.hideDeleteButton = attrs.hideDeleteButton;
         scope.getActionTitle = function() {
           return scope.isNew ? 'New' : 'Edit';
         }

@@ -47,6 +47,15 @@ describe('ygAdmin.directives.listTable module', function() {
       expect(table.find('button').text()).toEqual('New foo');
     });
 
+    it('should hide a new button if hide-new-button attribute is true', function() {
+      var table = $compile(
+        '<yg-list-table item="foo" hide-new-button="true"></yg-list-table>'
+      )($rootScope);
+
+      $rootScope.$digest();
+      expect(table.find('button').text()).toEqual('');
+    });
+
     it('should go to the item edit (new) view when the new item button is clicked', function() {
       var table = $compile(
         '<yg-list-table edit-view="foosEdit"></yg-list-table>'
