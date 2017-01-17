@@ -2,6 +2,9 @@
   <yg-text-input label="Name (Required)" ng-model="base_reminders.name" required>
     Internal name for reference (does not appear in UI)
   </yg-text-input>
+  <yg-text-input label="SMS Message (Required)" ng-model="base_reminders.smsMessage" required maxlength="28">
+    max 28 characters. Displayed in generated SMS messages.
+  </yg-text-input>
   <yg-resource-drop-down
       label="Category (Required)"
       ng-model="base_reminders.categoryId"
