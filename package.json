@@ -18,7 +18,7 @@
     "protractor": "^4.0.9"
   },
   "scripts": {
-    "postinstall": "bower install --allow-root",
+    "postinstall": "bower install --allow-root --force-latest",
     "prestart": "npm install",
     "start": "http-server -a localhost -p 8000 -c-1 ./app",
     "pretest": "npm install",
