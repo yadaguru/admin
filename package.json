@@ -1,7 +1,7 @@
 {
   "name": "yadaguru-admin",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Yadaguru frontend admin app",
   "repository": "https://github.com/yadaguru/yadaguru-admin",
   "license": "MIT",
