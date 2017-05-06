@@ -1,0 +1,41 @@
+{
+  "name": "config",
+  "wrap": "amd",
+  "json": {
+    "constants" : {
+      "API_URL" : "",
+      "API_ROUTE" : "data/",
+      "API_ROUTE_TERMINATOR" : ".json"
+    }
+  },
+  "development": {
+    "constants" : {
+      "API_URL" : "http://localhost:3005",
+      "API_ROUTE" : "/api/"
+    }
+  },
+  "staging": {
+    "constants" : {
+      "API_URL" : "http://staging.yadaguru.com",
+      "API_ROUTE" : "/api/"
+    }
+  },
+  "qa": {
+    "constants" : {
+      "API_URL" : "http://qa-api.yadaguru.com",
+      "API_ROUTE" : "/api/"
+    }
+  },
+  "qam": {
+    "constants" : {
+      "API_URL" : "http://qam-api.yadaguru.com",
+      "API_ROUTE" : "/api/"
+    }
+  },
+  "production": {
+    "constants" : {
+      "API_URL" : "http://api.yadaguru.com",
+      "API_ROUTE" : "/api/"
+    }
+  }
+}

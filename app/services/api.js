@@ -1,11 +1,12 @@
 'use strict';
 
-angular.module('ygAdmin.services.api', [])
+angular.module('ygAdmin.services.api', ['config'])
 
 .factory('apiService', [
   '$http',
+  'constants',
   'authService',
-  function($http, auth) {
+  function($http, constants, auth) {
     function getRequestConfig(isPublic) {
       if (isPublic) {
         return {};
@@ -13,7 +14,7 @@ angular.module('ygAdmin.services.api', [])
       return {headers: {Authorization: auth.getUserToken()}}
     }
 
-    var BASE_URL = 'http://localhost:3005/api/'; // TODO: move to config
+    var BASE_URL = constants.API_URL + constants.API_ROUTE;
 
     function getAll(resource, isPublic) {
       var route = BASE_URL + resource + '/';
