@@ -16,19 +16,7 @@
   },
   "staging": {
     "constants" : {
-      "API_URL" : "http://staging.yadaguru.com",
-      "API_ROUTE" : "/api/"
-    }
-  },
-  "qa": {
-    "constants" : {
-      "API_URL" : "http://qa-api.yadaguru.com",
-      "API_ROUTE" : "/api/"
-    }
-  },
-  "qam": {
-    "constants" : {
-      "API_URL" : "http://qam-api.yadaguru.com",
+      "API_URL" : "http://staging-api.yadaguru.com",
       "API_ROUTE" : "/api/"
     }
   },
